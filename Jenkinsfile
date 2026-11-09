@@ -3,38 +3,20 @@ pipeline {
 
     stages {
 
-        stage('Build') {
+        stage('Show Secret') {
             steps {
-                echo 'Building Application'
+                withCredentials([
+                    string(
+                        credentialsId: 'demo-secret',
+                        variable: 'MY_SECRET'
+                    )
+                ]) {
+
+                    sh '''
+                        echo "Secret Loaded"
+                    '''
+                }
             }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Running Tests'
-                sh 'python3 app.py'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploy Stage'
-            }
-        }
-    }
-
-    post {
-
-        success {
-            echo 'Build Succeeded'
-        }
-
-        failure {
-            echo 'Build Failed'
-        }
-
-        always {
-            cleanWs()
         }
     }
 }
